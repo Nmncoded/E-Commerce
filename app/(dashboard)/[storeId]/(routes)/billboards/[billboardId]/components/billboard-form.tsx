@@ -34,7 +34,7 @@ const formSchema = z.object({
   imageUrl: z.string().min(1, { message: "imageUrl is required" }),
 });
 
-type CategoryFormValues = z.infer<typeof formSchema>;
+type BillboardFormValues = z.infer<typeof formSchema>;
 
 const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
   const params = useParams();
@@ -50,12 +50,12 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
     : "Billboard created.";
   const action = initialData ? "Save changes" : "Create";
 
-  const form = useForm<CategoryFormValues>({
+  const form = useForm<BillboardFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || { label: "", imageUrl: "" },
   });
 
-  const onSubmit = async (data: CategoryFormValues) => {
+  const onSubmit = async (data: BillboardFormValues) => {
     console.log(data);
 
     try {
