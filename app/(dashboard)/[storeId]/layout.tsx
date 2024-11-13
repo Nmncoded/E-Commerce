@@ -4,12 +4,14 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import React from "react";
 
+type PageParams = Promise<{ storeId: string }>;
 interface LayoutProps {
   children: React.ReactNode;
-  params: { storeId: string };
+  params: PageParams;
 }
 
 const DashboardLayout = async ({ children, params }: LayoutProps) => {
+  const { storeId } = await params;
   const { userId } = await auth();
 
   if (!userId) {
@@ -18,7 +20,7 @@ const DashboardLayout = async ({ children, params }: LayoutProps) => {
 
   const store = await prisma.store.findUnique({
     where: {
-      id: params.storeId,
+      id: storeId,
       userId,
     },
   });
