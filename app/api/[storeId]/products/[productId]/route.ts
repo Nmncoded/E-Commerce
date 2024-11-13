@@ -2,18 +2,21 @@ import prismadb from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+type ProductApiParams = Promise<{ productId: string; storeId: string }>;
+
 export async function GET(
   request: Request,
-  { params }: { params: { productId: string } }
+  { params }: { params: ProductApiParams }
 ) {
   try {
-    if (!params.productId) {
+    const { productId } = await params;
+    if (!productId) {
       return new NextResponse("product id is required", { status: 400 });
     }
 
     const product = await prismadb.product.findUnique({
       where: {
-        id: params.productId,
+        id: productId,
       },
       include: {
         images: true,
@@ -33,9 +36,10 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { storeId: string; productId: string } }
+  { params }: { params: ProductApiParams }
 ) {
   try {
+    const { productId, storeId } = await params;
     const { userId } = await auth();
     const body = await request.json();
     const {
@@ -64,18 +68,18 @@ export async function PATCH(
       return new NextResponse("Invalid data", { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!storeId) {
       return new NextResponse("Store id is required", { status: 400 });
     }
 
-    if (!params.productId) {
+    if (!productId) {
       return new NextResponse("Product id is required", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findUnique({
       where: {
         userId,
-        id: params.storeId,
+        id: storeId,
       },
     });
 
@@ -85,7 +89,7 @@ export async function PATCH(
 
     await prismadb.product.update({
       where: {
-        id: params.productId,
+        id: productId,
       },
       data: {
         name,
@@ -103,7 +107,7 @@ export async function PATCH(
 
     const product = await prismadb.product.update({
       where: {
-        id: params.productId,
+        id: productId,
       },
       data: {
         images: {
@@ -124,27 +128,28 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { storeId: string; productId: string } }
+  { params }: { params: ProductApiParams }
 ) {
   try {
+    const { productId, storeId } = await params;
     const { userId } = await auth();
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!params.storeId) {
+    if (!storeId) {
       return new NextResponse("Store id is required", { status: 400 });
     }
 
-    if (!params.productId) {
+    if (!productId) {
       return new NextResponse("product id is required", { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findUnique({
       where: {
         userId,
-        id: params.storeId,
+        id: storeId,
       },
     });
 
@@ -154,7 +159,7 @@ export async function DELETE(
 
     const product = await prismadb.product.delete({
       where: {
-        id: params.productId,
+        id: productId,
       },
     });
 

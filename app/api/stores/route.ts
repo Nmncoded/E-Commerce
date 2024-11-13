@@ -8,7 +8,7 @@ export const POST = async (request: Request) => {
     const { name } = body;
     const { userId } = await auth();
 
-    console.log(userId);
+    // console.log(userId);
 
     if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });

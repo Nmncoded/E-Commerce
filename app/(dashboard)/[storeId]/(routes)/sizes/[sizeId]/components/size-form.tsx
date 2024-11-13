@@ -13,7 +13,6 @@ import {
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { useOrigin } from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Size } from "@prisma/client";
 import axios from "axios";
@@ -38,7 +37,6 @@ type SizeFormValues = z.infer<typeof formSchema>;
 const SizeForm: React.FC<SizeFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
-  const origin = useOrigin();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 

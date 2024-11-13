@@ -3,10 +3,11 @@ import { format } from "date-fns";
 import BillboardClient from "./components/client";
 import { BillboardColumn } from "./components/columns";
 
-const BillboardsPage = async ({ params }: { params: { storeId: string } }) => {
-  const billboards = await getBillboards(params.storeId);
+type BillboardPageParams = Promise<{ storeId: string }>;
 
-  // console.log("billboards------------ ", billboards);
+const BillboardsPage = async ({ params }: { params: BillboardPageParams }) => {
+  const { storeId } = await params;
+  const billboards = await getBillboards(storeId);
 
   const formattedBillboards: BillboardColumn[] = (billboards || [])?.map(
     (billboard) => ({

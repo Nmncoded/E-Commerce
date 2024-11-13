@@ -3,8 +3,11 @@ import { format } from "date-fns";
 import SizesClient from "./components/client";
 import { SizeColumn } from "./components/columns";
 
-const SizesPage = async ({ params }: { params: { storeId: string } }) => {
-  const sizes = await getSizes(params.storeId);
+type SizesPageParams = Promise<{ storeId: string }>;
+
+const SizesPage = async ({ params }: { params: SizesPageParams }) => {
+  const { storeId } = await params;
+  const sizes = await getSizes(storeId);
 
   const formattedSizes: SizeColumn[] = (sizes || [])?.map((item) => ({
     id: item.id,

@@ -1,8 +1,11 @@
 import getSizeById from "@/actions/getSizeById";
 import SizeForm from "./components/size-form";
 
-const SizePage = async ({ params }: { params: { sizeId: string } }) => {
-  const size = await getSizeById(params.sizeId);
+type SizePageParams = Promise<{ sizeId: string }>;
+
+const SizePage = async ({ params }: { params: SizePageParams }) => {
+  const { sizeId } = await params;
+  const size = await getSizeById(sizeId);
 
   // console.log(size);
 

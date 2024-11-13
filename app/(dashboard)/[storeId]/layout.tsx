@@ -4,15 +4,12 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import React from "react";
 
-const DashboardLayout = async ({
-  children,
-  params,
-}: {
+interface LayoutProps {
   children: React.ReactNode;
-  params: {
-    storeId: string;
-  };
-}) => {
+  params: { storeId: string };
+}
+
+const DashboardLayout = async ({ children, params }: LayoutProps) => {
   const { userId } = await auth();
 
   if (!userId) {

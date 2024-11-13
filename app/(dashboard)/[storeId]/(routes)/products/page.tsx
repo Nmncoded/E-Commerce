@@ -4,8 +4,11 @@ import { formatDate } from "date-fns";
 import ProductClient from "./components/client";
 import { ProductColumn } from "./components/columns";
 
-const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
-  const products = await getProducts(params?.storeId);
+type ProductsPageParams = Promise<{ storeId: string }>;
+
+const ProductsPage = async ({ params }: { params: ProductsPageParams }) => {
+  const { storeId } = await params;
+  const products = await getProducts(storeId);
 
   const formattedProducts: ProductColumn[] = (products || [])?.map((item) => ({
     id: item.id,

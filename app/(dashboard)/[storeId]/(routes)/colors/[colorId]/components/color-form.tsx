@@ -13,7 +13,6 @@ import {
 import Heading from "@/components/ui/heading";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import { useOrigin } from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Color } from "@prisma/client";
 import axios from "axios";
@@ -41,7 +40,6 @@ type ColorFormValues = z.infer<typeof formSchema>;
 const ColorForm: React.FC<ColorFormProps> = ({ initialData }) => {
   const params = useParams();
   const router = useRouter();
-  const origin = useOrigin();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 

@@ -3,8 +3,11 @@ import { format } from "date-fns";
 import CategoryClient from "./components/client";
 import { CategoryColumn } from "./components/columns";
 
-const CategoriesPage = async ({ params }: { params: { storeId: string } }) => {
-  const categories = await getCategories(params.storeId);
+type CategoriesPageParams = Promise<{ storeId: string }>;
+
+const CategoriesPage = async ({ params }: { params: CategoriesPageParams }) => {
+  const { storeId } = await params;
+  const categories = await getCategories(storeId);
 
   const formattedCategories: CategoryColumn[] = (categories || [])?.map(
     (item) => ({

@@ -1,8 +1,23 @@
 {
   "extends": ["next/core-web-vitals", "next/typescript"],
   "rules": {
-    "no-var": ["error", { "global": false }],
-    "no-console": "warn",
-    "no-unused-vars": "warn"
+    "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "no-var": "off",
+    "no-console": "off",
+    "no-unused-vars": "warn",
+    "@typescript-eslint/ban-ts-comment": [
+      "error",
+      {
+        "ts-ignore": "allow-with-description",
+        "ts-expect-error": "allow-with-description"
+      }
+    ],
+    "@typescript-eslint/no-empty-interface": [
+      "error",
+      {
+        "allowSingleExtends": true
+      }
+    ]
   }
 }

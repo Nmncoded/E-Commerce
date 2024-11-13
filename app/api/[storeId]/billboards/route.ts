@@ -2,11 +2,14 @@ import prisma from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+type BillboardApiParams = Promise<{ billboardId: string; storeId: string }>;
+
 export const POST = async (
   request: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: BillboardApiParams }
 ) => {
   try {
+    const { storeId } = await params;
     const body = await request.json();
     const { label, imageUrl } = body;
     const { userId } = await auth();
@@ -17,7 +20,7 @@ export const POST = async (
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!params.storeId) {
+    if (!storeId) {
       return new NextResponse("Store id is required", { status: 401 });
     }
 
@@ -28,7 +31,7 @@ export const POST = async (
     const storeByUserId = await prisma.store.findUnique({
       where: {
         userId,
-        id: params.storeId,
+        id: storeId,
       },
     });
 
@@ -40,7 +43,7 @@ export const POST = async (
       data: {
         label,
         imageUrl,
-        storeId: params.storeId,
+        storeId: storeId,
       },
     });
 
@@ -53,16 +56,17 @@ export const POST = async (
 
 export const GET = async (
   request: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: BillboardApiParams }
 ) => {
   try {
-    if (!params.storeId) {
+    const { storeId } = await params;
+    if (!storeId) {
       return new NextResponse("Store id is required", { status: 401 });
     }
 
     const billboards = await prisma.billboard.findMany({
       where: {
-        storeId: params.storeId,
+        storeId: storeId,
       },
     });
 

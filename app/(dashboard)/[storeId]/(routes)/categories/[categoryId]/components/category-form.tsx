@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { useOrigin } from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Billboard, Category } from "@prisma/client";
 import axios from "axios";
@@ -49,7 +48,6 @@ const CategoryForm: React.FC<CategoryFormProps> = ({
 }) => {
   const params = useParams();
   const router = useRouter();
-  const origin = useOrigin();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 

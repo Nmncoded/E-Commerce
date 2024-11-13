@@ -4,15 +4,14 @@ import getProductById from "@/actions/getProductById";
 import getSizes from "@/actions/getSizes";
 import ProductForm from "./components/product-form";
 
-const ProductPage = async ({
-  params,
-}: {
-  params: { productId: string; storeId: string };
-}) => {
-  const product = await getProductById(params?.productId);
-  const categories = await getCategories(params?.storeId);
-  const sizes = await getSizes(params?.storeId);
-  const colors = await getColors(params?.storeId);
+type ProductPageParams = Promise<{ storeId: string; productId: string }>;
+
+const ProductPage = async ({ params }: { params: ProductPageParams }) => {
+  const { productId, storeId } = await params;
+  const product = await getProductById(productId);
+  const categories = await getCategories(storeId);
+  const sizes = await getSizes(storeId);
+  const colors = await getColors(storeId);
 
   // console.log(product);
 

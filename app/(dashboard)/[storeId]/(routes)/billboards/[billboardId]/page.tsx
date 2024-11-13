@@ -1,14 +1,11 @@
 import getBillboardById from "@/actions/getBillboardById";
 import BillboardForm from "./components/billboard-form";
 
-const BillboardPage = async ({
-  params,
-}: {
-  params: { billboardId: string };
-}) => {
-  const billboard = await getBillboardById(params.billboardId);
+type BillboardPageParams = Promise<{ billboardId: string }>;
 
-  console.log(billboard);
+const BillboardPage = async ({ params }: { params: BillboardPageParams }) => {
+  const { billboardId } = await params;
+  const billboard = await getBillboardById(billboardId);
 
   return (
     <div className="flex-col">

@@ -2,13 +2,12 @@ import getBillboards from "@/actions/getBillboards";
 import getCategoryById from "@/actions/getCategoryById";
 import CategoryForm from "./components/category-form";
 
-const CategoryPage = async ({
-  params,
-}: {
-  params: { categoryId: string; storeId: string };
-}) => {
-  const category = await getCategoryById(params.categoryId);
-  const billboards = await getBillboards(params.storeId);
+type CategoryPageParams = Promise<{ storeId: string; categoryId: string }>;
+
+const CategoryPage = async ({ params }: { params: CategoryPageParams }) => {
+  const { storeId, categoryId } = await params;
+  const category = await getCategoryById(categoryId);
+  const billboards = await getBillboards(storeId);
 
   console.log(category);
 

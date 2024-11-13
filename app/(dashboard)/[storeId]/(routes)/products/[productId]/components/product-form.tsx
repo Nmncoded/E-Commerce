@@ -23,7 +23,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
-import { useOrigin } from "@/hooks/use-origin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Category, Color, Product, Size } from "@prisma/client";
 import axios from "axios";
@@ -62,11 +61,10 @@ const ProductForm: React.FC<ProductFormProps> = ({
 }) => {
   const params = useParams();
   const router = useRouter();
-  const origin = useOrigin();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  console.log(initialData);
+  // console.log(initialData);
 
   const title = initialData ? "Edit product" : "Create product";
   const description = initialData ? "Edit product" : "Add a new product";
@@ -130,6 +128,14 @@ const ProductForm: React.FC<ProductFormProps> = ({
     }
   };
 
+  const handleImageChange = (url: string, field: any) => {
+    field.onChange([...field.value, { url }]);
+  };
+
+  const handleImageRemove = (url: string, field: any) => {
+    field.onChange(field.value.filter((image: any) => image.url !== url));
+  };
+
   return (
     <>
       <AlertModal
@@ -167,14 +173,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   <ImageUpload
                     disabled={loading}
                     value={field.value?.map((image) => image.url)}
-                    onChange={(url) =>
-                      field.onChange([...field.value, { url }])
-                    }
-                    onRemove={(url) =>
-                      field.onChange([
-                        ...field.value.filter((image) => image.url !== url),
-                      ])
-                    }
+                    onRemove={(url: string) => handleImageRemove(url, field)}
+                    onChange={(url: string) => handleImageChange(url, field)}
                   />
                 </FormControl>
                 <FormMessage />
@@ -321,7 +321,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      // @ts-ignore
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
@@ -342,7 +341,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
                   <FormControl>
                     <Checkbox
                       checked={field.value}
-                      // @ts-ignore
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>

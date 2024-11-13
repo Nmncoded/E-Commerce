@@ -8,8 +8,8 @@ import { Button } from "./button";
 
 interface ImageUploadProps {
   disabled?: boolean;
-  onChange: (base64: string) => void;
-  onRemove: (base64: string) => void;
+  onChange: () => void;
+  onRemove: () => void;
   value: string[];
 }
 

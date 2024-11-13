@@ -1,8 +1,11 @@
 import getColorById from "@/actions/getColorById";
 import ColorForm from "./components/color-form";
 
-const ColorPage = async ({ params }: { params: { colorId: string } }) => {
-  const size = await getColorById(params.colorId);
+type ColorPageParams = Promise<{ colorId: string }>;
+
+const ColorPage = async ({ params }: { params: ColorPageParams }) => {
+  const { colorId } = await params;
+  const size = await getColorById(colorId);
 
   // console.log(size);
 

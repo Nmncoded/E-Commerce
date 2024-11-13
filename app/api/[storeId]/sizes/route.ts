@@ -2,11 +2,14 @@ import prisma from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+type SizeApiParams = Promise<{ storeId: string }>;
+
 export const POST = async (
   request: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: SizeApiParams }
 ) => {
   try {
+    const { storeId } = await params;
     const body = await request.json();
     const { name, value } = body;
     const { userId } = await auth();
@@ -17,7 +20,7 @@ export const POST = async (
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!params.storeId) {
+    if (!storeId) {
       return new NextResponse("Store id is required", { status: 401 });
     }
 
@@ -28,7 +31,7 @@ export const POST = async (
     const storeByUserId = await prisma.store.findUnique({
       where: {
         userId,
-        id: params.storeId,
+        id: storeId,
       },
     });
 
@@ -40,7 +43,7 @@ export const POST = async (
       data: {
         name,
         value,
-        storeId: params.storeId,
+        storeId: storeId,
       },
     });
 
@@ -53,16 +56,17 @@ export const POST = async (
 
 export const GET = async (
   request: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: SizeApiParams }
 ) => {
   try {
-    if (!params.storeId) {
+    const { storeId } = await params;
+    if (!storeId) {
       return new NextResponse("Store id is required", { status: 401 });
     }
 
     const sizes = await prisma.size.findMany({
       where: {
-        storeId: params.storeId,
+        storeId: storeId,
       },
     });
 

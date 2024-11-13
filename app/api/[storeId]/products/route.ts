@@ -2,11 +2,14 @@ import prisma from "@/lib/prismadb";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+type ProductApiParams = Promise<{ storeId: string }>;
+
 export const POST = async (
   request: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: ProductApiParams }
 ) => {
   try {
+    const { storeId } = await params;
     const { userId } = await auth();
     const body = await request.json();
     const {
@@ -26,7 +29,7 @@ export const POST = async (
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    if (!params.storeId) {
+    if (!storeId) {
       return new NextResponse("Store id is required", { status: 401 });
     }
 
@@ -44,7 +47,7 @@ export const POST = async (
     const storeByUserId = await prisma.store.findUnique({
       where: {
         userId,
-        id: params.storeId,
+        id: storeId,
       },
     });
 
@@ -66,7 +69,7 @@ export const POST = async (
             data: [...images.map((image: { url: string }) => image)],
           },
         },
-        storeId: params.storeId,
+        storeId: storeId,
       },
     });
 
@@ -79,22 +82,23 @@ export const POST = async (
 
 export const GET = async (
   request: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: ProductApiParams }
 ) => {
   try {
+    const { storeId } = await params;
     const { searchParams } = new URL(request.url);
     const categoryId = searchParams.get("categoryId") || undefined;
     const colorId = searchParams.get("colorId") || undefined;
     const sizeId = searchParams.get("sizeId") || undefined;
     const isFeatured = searchParams.get("isFeatured");
 
-    if (!params.storeId) {
+    if (!storeId) {
       return new NextResponse("Store id is required", { status: 401 });
     }
 
     const products = await prisma.product.findMany({
       where: {
-        storeId: params.storeId,
+        storeId: storeId,
         categoryId,
         colorId,
         sizeId,

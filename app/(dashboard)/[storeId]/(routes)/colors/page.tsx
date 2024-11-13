@@ -3,8 +3,11 @@ import { format } from "date-fns";
 import ColorsClient from "./components/client";
 import { ColorColumn } from "./components/columns";
 
-const ColorsPage = async ({ params }: { params: { storeId: string } }) => {
-  const colors = await getColors(params.storeId);
+type ColorsPageParams = Promise<{ storeId: string }>;
+
+const ColorsPage = async ({ params }: { params: ColorsPageParams }) => {
+  const { storeId } = await params;
+  const colors = await getColors(storeId);
 
   const formattedColors: ColorColumn[] = (colors || [])?.map((item) => ({
     id: item.id,
