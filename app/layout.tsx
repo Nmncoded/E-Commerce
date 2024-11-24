@@ -1,4 +1,5 @@
 import { ModalProvider } from "@/providers/modal-provider";
+import { ThemeProvider } from "@/providers/theme-provider";
 import { ToasterProvider } from "@/providers/toast-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
@@ -32,9 +33,11 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <ToasterProvider />
-          <ModalProvider />
-          {children}
+          <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+            <ToasterProvider />
+            <ModalProvider />
+            {children}
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
